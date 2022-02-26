@@ -8,23 +8,23 @@ public class TileGrid : MonoBehaviour
     [SerializeField, Header("Tile Set Up")]
     private GameObject cubePrefab;
     [SerializeField]
-    private int dimentions;
+    private int dimentions = 10;
     [SerializeField]
-    private float distanceBetween = 4;
+    private float distanceBetween = 3;
 
     [SerializeField, Header("Tile Type Management")]
-    private int blockedOffMax = 10;
+    private int blockedOffMax = 60;
 
 
     private int[,] gridArray;
-    List<CubeBehaviour> squares = new List<CubeBehaviour>();
-    List<Vector2> goldOres = new List<Vector2>();
-    List<Vector2> silverOres = new List<Vector2>();
-    List<Vector2> bronzeOres = new List<Vector2>();
+    List<CubeBehaviour> allCubes = new List<CubeBehaviour>();
+    List<CubeBehaviour> emptyCubes = new List<CubeBehaviour>();
+    List<CubeBehaviour> blockedOffCubes = new List<CubeBehaviour>();
 
     void Start()
     {
         gridArray = new int[dimentions, dimentions];
+        int n = 0;
 
         // Create the squares and set their value by chance
         for (int x = 0; x < gridArray.GetLength(0); x++)
@@ -35,8 +35,25 @@ public class TileGrid : MonoBehaviour
                 GameObject temp = Instantiate(cubePrefab);
                 temp.transform.SetParent(gameObject.transform);
                 temp.transform.position = new Vector3(x * distanceBetween + (distanceBetween * dimentions / 8), 0, z * distanceBetween + (distanceBetween * dimentions / 8));
-                squares.Add(temp.GetComponent<CubeBehaviour>());
+                temp.GetComponent<CubeBehaviour>().Number = n;
+                n++;
+                allCubes.Add(temp.GetComponent<CubeBehaviour>());
             }
         }
+        emptyCubes = allCubes;
+
+        SetBlockedOff();
+    }
+
+    private void SetBlockedOff()
+    {
+        int rand = (int)Random.Range(0.0f, emptyCubes.Count);
+
+        // Set blocked off
+        emptyCubes[rand].BlockOff();
+
+        // Remove from empty list and add to blocked off list
+        blockedOffCubes.Add(emptyCubes[rand]);
+        emptyCubes.RemoveAt(rand);
     }
 }

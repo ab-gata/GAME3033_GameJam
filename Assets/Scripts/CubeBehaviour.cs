@@ -4,9 +4,20 @@ using UnityEngine;
 
 public class CubeBehaviour : MonoBehaviour
 {
-    // position of square among the others
-    private Vector2 positionVector = Vector2.zero;
-    public Vector2 PositionVector { get { return positionVector; } }
+    // Colours to show cube states
+    [SerializeField]
+    private Material blockedOffMaterial;
+
+    // Pick up spawning
+    [SerializeField]
+    private GameObject pickUpPrefab;
+    [SerializeField]
+    private Transform pickUpSpawnTransform;
+
+
+    // Give the square a number
+    private int number;
+    public int Number { set { number = value; } }
 
 
     // Start is called before the first frame update
@@ -19,5 +30,10 @@ public class CubeBehaviour : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void BlockOff()
+    {
+        GetComponent<MeshRenderer>().material = blockedOffMaterial;
     }
 }
