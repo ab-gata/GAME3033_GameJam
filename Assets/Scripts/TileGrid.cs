@@ -41,16 +41,19 @@ public class TileGrid : MonoBehaviour
             }
         }
         emptyCubes = allCubes;
-
-        SetBlockedOff();
     }
 
-    private void SetBlockedOff()
+    public void Progress(float time)
+    {
+        SetBlockedOff(time);
+    }
+
+    private void SetBlockedOff(float time)
     {
         int rand = (int)Random.Range(0.0f, emptyCubes.Count);
 
         // Set blocked off
-        emptyCubes[rand].BlockOff();
+        emptyCubes[rand].BlockOff(time);
 
         // Remove from empty list and add to blocked off list
         blockedOffCubes.Add(emptyCubes[rand]);

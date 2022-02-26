@@ -110,6 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockedOffMaterial: {fileID: 2100000, guid: 4eb0698d1d541d24fa76007784200f7e, type: 2}
+  goingToBlockOffMaterial: {fileID: 2100000, guid: 054dadd6f6c3d0c4aa193abc4fa2df18, type: 2}
   pickUpPrefab: {fileID: 0}
   pickUpSpawnTransform: {fileID: 7273913307545889653}
 --- !u!1 &6277575262628262477
