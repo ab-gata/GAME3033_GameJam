@@ -48,6 +48,13 @@ public class TileGrid : MonoBehaviour
         SetBlockedOff(time);
     }
 
+    public Transform GetPickUpSpawnPos()
+    {
+        int rand = (int)Random.Range(0.0f, emptyCubes.Count);
+
+        return emptyCubes[rand].PickUpTransform;
+    }
+
     private void SetBlockedOff(float time)
     {
         int rand = (int)Random.Range(0.0f, emptyCubes.Count);
