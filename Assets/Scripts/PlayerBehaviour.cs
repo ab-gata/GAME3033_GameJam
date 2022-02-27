@@ -33,6 +33,8 @@ public class PlayerBehaviour : MonoBehaviour
         if (transform.position.y < -3.0f)
         {
             transform.position = new Vector3(18,2,18);
+            gameManager.LoseLives();
+            GetComponent<AudioSource>().Play();
         }
     }
 

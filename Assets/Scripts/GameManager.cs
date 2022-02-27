@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     private TileGrid tileGrid;
     [SerializeField]
     private GameObject pickUpObject;
+    [SerializeField]
+    private GameObject player;
 
     // HUD references
     [SerializeField, Header("UI Elements")]
@@ -42,6 +44,8 @@ public class GameManager : MonoBehaviour
     private GameObject gameoverHUD;
     [SerializeField]
     private TextMeshProUGUI gameoverScoreText;
+    [SerializeField]
+    private TextMeshProUGUI gameoverTimeText;
     [SerializeField]
     private TextMeshProUGUI tilesRestoredScoreText;
 
@@ -114,13 +118,19 @@ public class GameManager : MonoBehaviour
 
     public void LoseLives()
     {
+        if (player)
+        {
+            player.GetComponent<AudioSource>().Play();
+        }
         lives--;
         if (lives <= 0)
         {
             pause = true;
             gameoverScoreText.text = "SCORE\n" + score;
             tilesRestoredScoreText.text = "TILES RESTORED\n" + tilesRestored;
+            gameoverTimeText.text = "SURVIVAL TIME\n" + timer;
             gameoverHUD.SetActive(true);
+            gameoverHUD.GetComponent<AudioSource>().Play();
         }
         
     }
