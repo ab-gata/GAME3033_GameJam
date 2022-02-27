@@ -13,16 +13,15 @@ public class PlayerBehaviour : MonoBehaviour
     Vector3 moveDirection = Vector3.zero;
     private Vector2 moveInput = Vector2.zero;
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    // Game Manager
+    [SerializeField]
+    private GameManager gameManager;
 
     // Update is called once per frame
     void Update()
     {
+        if (gameManager.GamePaused()) return;
+
         if (!(moveInput.magnitude > 0)) moveDirection = Vector3.zero;
 
         moveDirection = transform.forward * moveInput.y + transform.right * moveInput.x;
@@ -30,6 +29,11 @@ public class PlayerBehaviour : MonoBehaviour
         Vector3 movementDirection = moveDirection * (speed * Time.deltaTime);
 
         transform.position += movementDirection;
+
+        if (transform.position.y < -3.0f)
+        {
+            transform.position = new Vector3(18,2,18);
+        }
     }
 
     public void OnMove(InputValue value)

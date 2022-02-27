@@ -17,6 +17,8 @@ public class CubeBehaviour : MonoBehaviour
     private Transform pickUpSpawnTransform;
     public Transform PickUpTransform { get { return pickUpSpawnTransform; } }
 
+    public bool hasPickUp = false;
+
 
     // Cube stats
     private int number;

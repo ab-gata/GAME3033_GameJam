@@ -6,17 +6,19 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     // Counters for progress
-    private int round = 0;
+    private int roundUp = 10;
     private float timer = 0;
     private float blockOffTimer = 0;
     [SerializeField]
-    private float timeForProgress = 3.0f;
+    private float timeForProgress = 5.0f;
 
     // Player stats
     private float score = 0;
     private int pickUps = 0;
     private int tileRestores = 0;
     private int lives = 3;
+    private bool pause = false;
+    private int tilesRestored = 0;
 
     // Components
     [SerializeField]
@@ -25,12 +27,10 @@ public class GameManager : MonoBehaviour
     private GameObject pickUpObject;
 
     // HUD references
-    [SerializeField] 
+    [SerializeField, Header("UI Elements")]
     TextMeshProUGUI scoreText;
     [SerializeField]
     TextMeshProUGUI timerText;
-    [SerializeField]
-    TextMeshProUGUI pickUpsText;
     [SerializeField]
     TextMeshProUGUI tileRestoreText;
     [SerializeField]
@@ -38,47 +38,59 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI infoText;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField, Header("GameOver Elements")]
+    private GameObject gameoverHUD;
+    [SerializeField]
+    private TextMeshProUGUI gameoverScoreText;
+    [SerializeField]
+    private TextMeshProUGUI tilesRestoredScoreText;
+
+    [SerializeField, Header("Pause HUD")]
+    private GameObject pauseHUD;
 
     // Update is called once per frame
     void Update()
     {
-        // update timers
-        timer += Time.deltaTime;
-        blockOffTimer += Time.deltaTime;
-
-        // Block off another block
-        if (blockOffTimer > timeForProgress)
+        if (!pause)
         {
-            blockOffTimer = 0;
-            tileGrid.Progress(timeForProgress);
+            // update timers
+            timer += Time.deltaTime;
+            blockOffTimer += Time.deltaTime;
+
+            // Block off another block
+            if (blockOffTimer > timeForProgress)
+            {
+                blockOffTimer = 0;
+                tileGrid.Progress(timeForProgress);
+            }
+
+            // Update game difficulty based off time
+            if (timer > roundUp)
+            {
+                roundUp += 10;
+                if (timeForProgress > 2.0f)
+                {
+                    timeForProgress -= 0.5f;
+                }
+            }
+
+            UpdateHUD();
         }
-
-        // Spawn another pick up
-        if (true)
-        {
-
-        }
-
-        UpdateHUD();
     }
 
     private void UpdateHUD()
     {
         scoreText.text = "[score] " + score;
         timerText.text = "[timer] " + (int)timer;
-        pickUpsText.text = "[restore fragments] " + pickUps + "/3";
-        tileRestoreText.text = "[tile restores] " + tileRestores;
+        tileRestoreText.text = "[tile restores]\n" + tileRestores + " (" + pickUps + "/3)";
         livesText.text = "[lives] " + lives;
+        infoText.text = "[tile block off speed]\n" + timeForProgress;
     }
 
     // When a pick up is collect, spawn another one
     public void AddPickUp()
     {
+        score += 100;
         pickUps++;
         if (pickUps >= 3)
         {
@@ -92,7 +104,9 @@ public class GameManager : MonoBehaviour
     {
         if (tileRestores >0)
         {
+            score += 1000;
             tileRestores--;
+            tilesRestored++;
             return true;
         }
         return false;
@@ -103,7 +117,28 @@ public class GameManager : MonoBehaviour
         lives--;
         if (lives <= 0)
         {
-            // GAME OVER
+            pause = true;
+            gameoverScoreText.text = "SCORE\n" + score;
+            tilesRestoredScoreText.text = "TILES RESTORED\n" + tilesRestored;
+            gameoverHUD.SetActive(true);
         }
+        
+    }
+
+    public void Pause()
+    {
+        pause = true;
+        pauseHUD.SetActive(true);
+    }
+
+    public void Resume()
+    {
+        pause = false;
+        pauseHUD.SetActive(false);
+    }
+
+    public bool GamePaused()
+    {
+        return pause;
     }
 }
